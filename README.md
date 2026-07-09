@@ -22,8 +22,9 @@ By the end of this lab you'll be able to:
 
 ## Prerequisites
 
-- The `cm` binary, installed and on `PATH` (this repo is a workspace/config layer around
-  it, not the binary itself — get it from your CodeMender access channel)
+- **Download and install CodeMender** from [codemender.google.com/download](https://codemender.google.com/download)
+  (this repo is a workspace/config layer around the `cm` binary, not the binary itself)
+- The `cm` binary on `PATH` after install
 - Node.js + npm (to build/run the Juice Shop target)
 - Git
 

@@ -26,6 +26,13 @@ findings DB. Your shell's `HOME` is untouched.
 
 ---
 
+## Prerequisites
+
+Download and install CodeMender from [codemender.google.com/download](https://codemender.google.com/download)
+so the `cm` binary is on `PATH` — everything below assumes it's already installed.
+
+---
+
 ## One-time setup (already done)
 
 - ✅ Juice Shop cloned + `npm install` complete (build/verify works)
