@@ -37,21 +37,26 @@ Sanity check anytime: `cm init --verify`
 
 ---
 
-## Claude Code skills (optional, faster demo)
+## Agent skills (optional, faster demo)
 
-Four project skills wrap the workflows (in `.claude/skills/`). Type `/` in Claude Code
-or ask in plain language:
+Four project skills wrap the workflows, provided for two agent harnesses:
+
+- **Claude Code** — `.claude/skills/` — invoke with `/cm-setup`, `/cm-scan`, `/cm-fix`,
+  `/cm-audit`, or ask in plain language.
+- **Google Antigravity** — `.agents/skills/` — same four skills, ported to Antigravity's
+  skill schema (`name`/`description` frontmatter only; activates via semantic matching on
+  the description rather than an explicit slash command).
 
 | Skill | Does |
 |---|---|
-| `/cm-setup [path]` | init + point the sandbox + wire VCS/build for a project |
-| `/cm-scan <path> [context]` | `cm find` + summarize findings (checks the sandbox first) |
-| `/cm-fix <id \| description>` | patch → `cm build` verify → show diff |
-| `/cm-audit [path] [severity]` | full scan → auto-fix everything ≥ threshold → verify |
+| `cm-setup [path]` | init + point the sandbox + wire VCS/build for a project |
+| `cm-scan <path> [context]` | `cm find` + summarize findings (checks the sandbox first) |
+| `cm-fix <id \| description>` | patch → `cm build` verify → show diff |
+| `cm-audit [path] [severity]` | full scan → auto-fix everything ≥ threshold → verify |
 
 They auto-detect this demo's isolated workspace (they walk up for `bin/cm`) and fall back
-to the global `cm` in any other repo. New skills are picked up on a fresh Claude Code
-session in this directory.
+to the global `cm` in any other repo. New skills are picked up on a fresh agent session in
+this directory.
 
 ## Run the demo (raw CLI)
 
