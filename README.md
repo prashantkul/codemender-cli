@@ -74,17 +74,21 @@ cd juice-shop
 cm find routes/login.ts -y
 cm report
 ```
-**Expected:** one `CRITICAL` finding — SQL injection in the login query, built by
-string-interpolating `req.body.email` directly into SQL (exploitable with `' OR 1=1--`).
+**Expected:** at least one `CRITICAL` finding — SQL injection in the login query, built
+by string-interpolating `req.body.email` directly into SQL (exploitable with
+`' OR 1=1--`). The agent also reads `lib/insecurity.ts` for context and commonly reports
+a few more findings there too (hardcoded JWT/HMAC keys, weak MD5 hashing, an open
+redirect) — exact count and severities vary run to run since it's LLM-driven; the login
+SQL injection is the one that's always there.
 
 ### Task 2 — Fix it and verify
 ```bash
-cm fix <id>          # <id> = the 8-char id from `cm report`
-cm build
+cm fix <id>          # <id> = the 8-char id from `cm report` — can take a few minutes
+cm build --force     # --force skips the interactive confirmation prompt
 ```
 **Expected:** the diff (`cm vcs diff`) replaces string interpolation with a parameterized
-query; `cm build` exits green (`tsc --noEmit` passes); `cm report` shows the finding as
-`FIXED ✅`.
+query; `cm build --force` exits green (`tsc --noEmit` passes); `cm report` shows the
+finding as `FIXED ✅`.
 
 ### Task 3 — Reset and scan wider
 ```bash
@@ -113,11 +117,41 @@ cm clean                 # wipe this workspace's findings DB (isolated — safe 
 ```
 **Expected:** `git status` in `juice-shop/` is clean; `cm report` shows no findings.
 
+### Task 6 — Redo the workflow with Antigravity skills
+Repeat Tasks 1–2, but conversationally, using the skills in `.agents/skills/` instead of
+typing raw `cm` commands.
+
+1. Open the `codemender-cli` folder as a project in **Google Antigravity**.
+2. Ask the agent to set up CodeMender for the `juice-shop/` project (in your own words —
+   don't name the skill). This should activate **`cm-setup`**.
+   **Expected:** the agent runs/confirms `cm init --verify`, and `project_paths` /
+   `vcs.type` / `build.command` end up pointing at `juice-shop/`, `git`, and
+   `npx tsc --noEmit` respectively — matching what you set by hand in Setup.
+3. Ask it to scan `routes/login.ts` for vulnerabilities. This should activate
+   **`cm-scan`**.
+   **Expected:** the same CRITICAL SQL-injection finding as Task 1 (plus possibly a few
+   more from `lib/insecurity.ts` — see the note in Task 1), summarized by severity with
+   the finding id called out.
+4. Ask it to fix that finding. This should activate **`cm-fix`**.
+   **Expected:** same outcome as Task 2 — parameterized-query diff, green build, finding
+   marked `FIXED ✅`. The underlying `cm fix` call can take a few minutes; the agent
+   should wait for it rather than treat it as hung.
+5. Reset (`cm vcs reset --force`), then ask it to audit the whole `routes/` directory at
+   `HIGH` severity or above. This should activate **`cm-audit`**.
+   **Expected:** same shape of result as Task 4 — a fix/verify pass per finding and a
+   final summary table — but driven by one conversational request instead of a manual
+   loop. With many findings this can take a while, since each fix+build round-trips to
+   the server; a good agent narrates progress rather than going quiet.
+
+Compare notes with the CLI run: same findings, same fixes, same build results — the skill
+is just a faster on-ramp to the identical underlying `cm` calls.
+
 ### Stretch tasks
-- Repeat Task 1–2 using the `cm-scan` / `cm-fix` skills instead of raw CLI commands, and
-  compare the experience.
-- Run `/cm-setup` (or the Antigravity equivalent) against a different project of your own
-  and find a real finding.
+- Run `cm-setup` (Claude Code or Antigravity) against a different project of your own and
+  find a real finding.
+- Edit a skill's `description` frontmatter in `.agents/skills/` so it *doesn't* match your
+  phrasing, and see it fail to activate — this is a good way to build intuition for how
+  semantic activation differs from Claude Code's explicit `/slash-command` invocation.
 
 ## Agent skills (optional, faster lab)
 

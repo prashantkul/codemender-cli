@@ -34,7 +34,7 @@ and HIGH) from the user's request.
    (don't let one bad patch abort the batch); flag it for manual review at the end.
 
 6. **Summarize.** Present a table: id · severity · file · title · fixed? · build. Give totals
-   (N fixed & green, M failed). Show `"$CM" vcs diff --stat` for the combined change set,
+   (N fixed & green, M failed). Show `"$CM" vcs diff` for the combined change set,
    and `"$CM" report` for final statuses.
 
 7. **Tell the user how to keep or roll back.** `"$CM" vcs stage` / commit to keep;
