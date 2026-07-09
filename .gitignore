@@ -1,0 +1,11 @@
+# Isolated CodeMender demo workspace: local state, keys, and generated artifacts.
+.codemender/
+
+# The vulnerable demo target — a separate nested clone of OWASP Juice Shop
+# (github.com/juice-shop/juice-shop), not part of this tool's source.
+juice-shop/
+
+# Package manager caches
+.npm/
+.cache/
+node_modules/

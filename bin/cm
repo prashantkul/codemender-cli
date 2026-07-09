@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# CodeMender demo wrapper.
+# Pins the workspace to this demo's ISOLATED ./.codemender (own state.db, config,
+# keys) by overriding HOME for the cm process only — your global ~/.codemender is
+# never touched. Activate with `source activate.sh`, then use `cm` normally.
+export HOME="/home/user/source-code/cm-cli"
+exec /home/user/.local/bin/cm "$@"
